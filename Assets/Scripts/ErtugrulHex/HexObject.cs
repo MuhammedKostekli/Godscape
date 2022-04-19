@@ -24,9 +24,9 @@ public class HexObject
         float width = height * width_multiplier;
         float vert = height * 0.75f;
         float horiz = width;
-        return new Vector3(horiz * this.R,           
+        return new Vector3(horiz * (this.Q + this.R / 2f),           
             0,
-            vert * (this.Q + this.R / 2)
+            vert * this.R
             );
     }
 }

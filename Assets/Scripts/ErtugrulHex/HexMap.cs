@@ -12,9 +12,9 @@ public class HexMap : MonoBehaviour
     }
     public void generateMap()
     {
-        for (int column = 0; column < 10; column++)
+        for (int column = 0; column < 50; column++)
         {
-            for (int row = 0;row<10;row++)
+            for (int row = 0;row<50;row++)
             {
                 HexObject h = new HexObject(column,row);
                 Instantiate(hexPrefab,h.Position(),Quaternion.identity,this.transform);
