@@ -16,9 +16,11 @@ public class UIManager : MonoBehaviour
 
     [SerializeField]
     private TextMeshProUGUI playersInGameText;
-    
 
-    
+    [SerializeField]
+    private TextMeshProUGUI gameYearText;
+
+
     private void Awake()
     {
         Cursor.visible = true;      
@@ -27,6 +29,7 @@ public class UIManager : MonoBehaviour
     private void Update()
     {
         playersInGameText.text = $"Players in game: {PlayersManager.Instance.PlayersInGame}";
+        gameYearText.text = $"Year: {GameManager.Instance.gameYear}";
     }
 
     private void Start()
@@ -59,7 +62,7 @@ public class UIManager : MonoBehaviour
         {
             if (NetworkManager.Singleton.StartClient())
             {
-
+                
             }
             else
             {

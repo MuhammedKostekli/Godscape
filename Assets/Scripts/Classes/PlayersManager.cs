@@ -3,7 +3,10 @@ using Unity.Netcode;
 using UnityEngine;
 
 public class PlayersManager : Singleton<PlayersManager>
+
 {
+    [SerializeField] GameObject gameManager;
+    [SerializeField] int playersCountForStart = 4;
     private NetworkVariable<int> playersInGame = new NetworkVariable<int>();
 
     public int PlayersInGame
@@ -20,6 +23,11 @@ public class PlayersManager : Singleton<PlayersManager>
         {
             Debug.Log($"{id} just connected...");
             playersInGame.Value++;
+            if(playersInGame.Value == playersCountForStart)
+            {
+                gameManager.GetComponent<GameManager>().gameStatus = true;
+                gameManager.GetComponent<GameManager>().StartGame();
+            }
         
         };
 
