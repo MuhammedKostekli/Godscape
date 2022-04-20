@@ -37,6 +37,7 @@ public class HexMapCamera : MonoBehaviour
 
 		float xDelta = Input.GetAxis("Horizontal");
 		float zDelta = Input.GetAxis("Vertical");
+
 		if (xDelta != 0f || zDelta != 0f)
 		{
 			AdjustPosition(xDelta, zDelta);
@@ -66,21 +67,22 @@ public class HexMapCamera : MonoBehaviour
 		float damping = Mathf.Max(Mathf.Abs(xDelta), Mathf.Abs(zDelta));
 		float distance = moveSpeed * damping * Time.deltaTime;
 
-		Vector3 position = transform.localPosition;
+		Vector3 position = transform.position;
 		position += direction * distance;
-		transform.localPosition = ClampPosition(position);
+		transform.position = ClampPosition(position);
 	}
 
 	Vector3 ClampPosition(Vector3 position)
 	{
-		float xMax =
+		/*float xMax =
 			(grid.chunkCountX * Hex.chunkSizeX - 0.5f) *
-			(2f * Hex.innerRadius);
+			(2f * Hex.innerRadius);*/
+		float xMax = 120f;
 		position.x = Mathf.Clamp(position.x, 0f, xMax);
-
-		float zMax =
+		/*float zMax =
 			(grid.chunkCountZ * Hex.chunkSizeZ -1) *
-			(1.5f * Hex.outerRadius);
+			(1.5f * Hex.outerRadius);*/
+		float zMax = 70f;
 		position.z = Mathf.Clamp(position.z, 0f, zMax);
 
 		return position;
