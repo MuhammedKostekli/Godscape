@@ -8,9 +8,12 @@ using UnityEngine.UI;
 
 public class GameManager : Singleton<GameManager>
 {
+    #pragma warning disable 0436
     [SerializeField] GameObject uiManager;
+    [SerializeField] GameObject gameMap;
 
     [SerializeField] float worldEventPerSec = 10f;
+    [SerializeField] int resourcePerTile = 100;
     private NetworkVariable<float> timer = new NetworkVariable<float>();
     public NetworkVariable<bool> wEventTrigger = new NetworkVariable<bool>();
     private NetworkVariable<bool> isGameStarted = new NetworkVariable<bool>(false);
@@ -18,9 +21,11 @@ public class GameManager : Singleton<GameManager>
     public NetworkList<int> worldEventList;
     public NetworkList<int> selectedWorldEventList;
     public NetworkVariable<int> selectedWorldEventIndex = new NetworkVariable<int>();
+    public GamePlayer player;
+    public List<GamePlayer> playerInfoList = new List<GamePlayer>();
+
 
     private float gameStartTime;
-    
     [SerializeField] int gameStartYear = 3245;
     [SerializeField] int gameYearPerSec = 6;
     [SerializeField] int worldEventCount = 20;
@@ -53,7 +58,6 @@ public class GameManager : Singleton<GameManager>
             return wEventTrigger.Value;
         }
     }
-
     public NetworkList<int> worldEventIndexList
     {
         get
@@ -82,7 +86,6 @@ public class GameManager : Singleton<GameManager>
             isGameStarted.Value = value;
         }
     }
-
     public float timerVar
     {
         get
@@ -116,7 +119,10 @@ public class GameManager : Singleton<GameManager>
     private void Start()
     {
         currentGameYear.Value = gameStartYear;
+        generatePlayerInfos();
+        generateMapInfos();
     }
+
     private void Update()
     {
         if(NetworkManager.IsHost)
@@ -128,12 +134,117 @@ public class GameManager : Singleton<GameManager>
             }
         }  
     }
+
     public void StartGame()
     {
         gameStartTime = Time.time;
         StartCoroutine(gameYears());
         StartCoroutine(worldEvents());
     }
+
+    public void generatePlayerInfos()
+    {
+        playerInfoList.Add(new GamePlayer(0, "Mien", 0, 0, 0, 0, 0, 0));
+        playerInfoList.Add(new GamePlayer(0, "Nedes", 0, 0, 0, 0, 0, 0));
+        playerInfoList.Add(new GamePlayer(0, "Vealla", 0, 0, 0, 0, 0, 0));
+        playerInfoList.Add(new GamePlayer(0, "Cistris", 0, 0, 0, 0, 0, 0));
+    }
+
+    public void generateMapInfos()
+    {
+        foreach (var obj in gameMap.GetComponentsInChildren<MeshFilter>().Select((value, i) => new { i, value }))
+        {
+            var x = obj.i % 50;
+            var y = obj.i / 50;
+            var resourceType = "";
+            var godIndex = -1;
+            switch (obj.value.sharedMesh.name)
+            {
+                case string a when a.Contains("Sea"):
+                    resourceType = "Sea";
+                    break;
+                case string a when a.Contains("Army"):
+                    resourceType = "Army";
+                    break;
+                case string a when a.Contains("Trade"):
+                    resourceType = "Trade";
+                    break;
+                case string a when a.Contains("Culture"):
+                    resourceType = "Culture";
+                    break;
+                case string a when a.Contains("Tech"):
+                    resourceType = "Technology";
+                    break;
+                case string a when a.Contains("Heretic"):
+                    resourceType = "Heretic";
+                    break;
+                case string a when a.Contains("Production"):
+                    resourceType = "Production";
+                    break;
+                case string a when a.Contains("Volcano"):
+                    resourceType = "Volcano";
+                    break;
+                default:
+                    Debug.Log(obj.value.sharedMesh.name);
+                    break;
+
+            }
+            if (resourceType != "Sea" && obj.value.gameObject.tag != "Untagged")
+            {
+                if (int.Parse(obj.value.gameObject.tag) == 0)
+                {
+                    //obj.value.gameObject.GetComponent<MeshRenderer>().enabled = false;
+                    godIndex = 0;
+                }
+                if (int.Parse(obj.value.gameObject.tag) == 1)
+                {
+                    //obj.value.gameObject.GetComponent<MeshRenderer>().enabled = false;
+                    godIndex = 1;
+                }
+                if (int.Parse(obj.value.gameObject.tag) == 2)
+                {
+                    //obj.value.gameObject.GetComponent<MeshRenderer>().enabled = false;
+                    godIndex = 2;
+                }
+                if (int.Parse(obj.value.gameObject.tag) == 3)
+                {
+                    //obj.value.gameObject.GetComponent<MeshRenderer>().enabled = false;
+                    godIndex = 3;
+                }
+            }
+            if (godIndex != -1)
+            {
+                switch (resourceType)
+                {
+                    case "Army":
+                        playerInfoList[godIndex].militaryPoints += resourcePerTile;
+                        break;
+                    case "Trade":
+                        playerInfoList[godIndex].tradePoints += resourcePerTile;
+                        break;
+                    case "Culture":
+                        playerInfoList[godIndex].culturePoints += resourcePerTile;
+                        break;
+                    case "Technology":
+                        playerInfoList[godIndex].techPoints += resourcePerTile;
+                        break;
+                    case "Production":
+                        playerInfoList[godIndex].productionPoints += resourcePerTile;
+                        break;
+                    default:
+                        Debug.Log(resourceType);
+                        break;
+
+                }
+            }
+            TileInfo tl = obj.value.gameObject.AddComponent(typeof(TileInfo)) as TileInfo;
+            tl.godIndex = godIndex;
+            tl.x = x;
+            tl.y = y;
+            tl.resourceType = resourceType;
+        }
+    }
+
     public void CalculateWorldEventVoteResult()
     {
         /*if (selectedWorldEventIndexList.Count == PlayersManager.Instance.PlayersInGame)
@@ -164,6 +275,7 @@ public class GameManager : Singleton<GameManager>
             uiManager.GetComponent<UIManager>().showWorldEventAnnouncement();
         }
     }
+
     IEnumerator worldEvents()
     {
         while (true)
@@ -191,7 +303,6 @@ public class GameManager : Singleton<GameManager>
             }
         }
     }
-
 
     IEnumerator gameYears()
     {
