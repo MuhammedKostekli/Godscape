@@ -22,6 +22,7 @@ public class GameManager : Singleton<GameManager>
     public NetworkList<int> selectedWorldEventList;
     public NetworkVariable<int> selectedWorldEventIndex = new NetworkVariable<int>();
     public GamePlayer player;
+    public int playerIndex;
     public List<GamePlayer> playerInfoList = new List<GamePlayer>();
 
 
@@ -29,6 +30,7 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] int gameStartYear = 3245;
     [SerializeField] int gameYearPerSec = 6;
     [SerializeField] int worldEventCount = 20;
+    private bool isUserSpesificMapCreated = false;
 
     public float minutes
     {       
@@ -109,13 +111,12 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
-
-
     private void Awake()
     {
         worldEventList = new NetworkList<int>(new List<int>());
         selectedWorldEventList = new NetworkList<int>(new List<int>());
     }
+
     private void Start()
     {
         currentGameYear.Value = gameStartYear;
@@ -132,7 +133,15 @@ public class GameManager : Singleton<GameManager>
                 timer.Value = Time.time - gameStartTime;
                 //Debug.Log((int)timer.Value);
             }
-        }  
+        }
+
+        if(!isUserSpesificMapCreated && gameStatus)
+        {
+            isUserSpesificMapCreated = true;
+            playerIndex = (int)NetworkManager.LocalClientId;
+            generateUserSpesificMap();
+            player = playerInfoList[playerIndex];
+        }
     }
 
     public void StartGame()
@@ -193,22 +202,19 @@ public class GameManager : Singleton<GameManager>
             {
                 if (int.Parse(obj.value.gameObject.tag) == 0)
                 {
-                    //obj.value.gameObject.GetComponent<MeshRenderer>().enabled = false;
                     godIndex = 0;
                 }
+                //obj.value.gameObject.GetComponent<MeshRenderer>().material = Resources.Load("God" + obj.value.gameObject.tag + "Color") as Material;
                 if (int.Parse(obj.value.gameObject.tag) == 1)
                 {
-                    //obj.value.gameObject.GetComponent<MeshRenderer>().enabled = false;
                     godIndex = 1;
                 }
                 if (int.Parse(obj.value.gameObject.tag) == 2)
                 {
-                    //obj.value.gameObject.GetComponent<MeshRenderer>().enabled = false;
                     godIndex = 2;
                 }
                 if (int.Parse(obj.value.gameObject.tag) == 3)
                 {
-                    //obj.value.gameObject.GetComponent<MeshRenderer>().enabled = false;
                     godIndex = 3;
                 }
             }
@@ -242,6 +248,18 @@ public class GameManager : Singleton<GameManager>
             tl.x = x;
             tl.y = y;
             tl.resourceType = resourceType;
+        }
+    }
+
+    public void generateUserSpesificMap()
+    {
+        var id = playerIndex;
+        foreach (var obj in gameMap.GetComponentsInChildren<TileInfo>().Select((value, i) => new { i, value }))
+        {
+            if(obj.value.godIndex != id && obj.value.godIndex != -1)
+            {
+                obj.value.gameObject.GetComponent<MeshRenderer>().material = Resources.Load("God" + (obj.value.godIndex+1) + "Color") as Material;
+            }
         }
     }
 

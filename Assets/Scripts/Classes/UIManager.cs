@@ -3,10 +3,14 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
+    [SerializeField]
+    private GameObject mainCamera;
+
     [SerializeField]
     private Button startServerButton;
 
@@ -16,12 +20,32 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     private Button startClientButton;
 
+    // Header Text
     [SerializeField]
     private TextMeshProUGUI playersInGameText;
 
     [SerializeField]
     private TextMeshProUGUI gameYearText;
 
+    [SerializeField]
+    private TextMeshProUGUI godNameText;
+
+    [SerializeField]
+    private TextMeshProUGUI militaryResText;
+
+    [SerializeField]
+    private TextMeshProUGUI cultureResText;
+
+    [SerializeField]
+    private TextMeshProUGUI tradeResText;
+
+    [SerializeField]
+    private TextMeshProUGUI techResText;
+
+    [SerializeField]
+    private TextMeshProUGUI productionResText;
+
+    // Canvas
     [SerializeField]
     private Canvas worldEventCanvas;
 
@@ -33,6 +57,12 @@ public class UIManager : MonoBehaviour
 
     [SerializeField]
     private Canvas headerCanvas;
+
+    [SerializeField]
+    private Canvas playerTileActionsCanvas;
+
+    [SerializeField]
+    private Canvas opponentTileActionsCanvas;
 
     [SerializeField]
     private List<Button> worldEventSelectionButtons;
@@ -69,6 +99,8 @@ public class UIManager : MonoBehaviour
 
     Coroutine worldEventRoutine = null;
 
+    public TileInfo currentSelectedTileInfo; 
+
     private void Awake()
     {
         Cursor.visible = true;      
@@ -77,7 +109,23 @@ public class UIManager : MonoBehaviour
     private void Update()
     {
         playersInGameText.text = $"{PlayersManager.Instance.PlayersInGame} Player";
-        gameYearText.text = $"{GameManager.Instance.gameYear}";
+        // Game is running
+        if (GameManager.Instance.gameStatus)
+        {
+            gameYearText.text = $"{GameManager.Instance.gameYear}";
+            godNameText.text = GameManager.Instance.player.godName.ToString();
+            militaryResText.text = "Army\n" + GameManager.Instance.player.militaryPoints.ToString();
+            cultureResText.text = "Culture\n" + GameManager.Instance.player.culturePoints.ToString();
+            tradeResText.text = "Trade\n" + GameManager.Instance.player.tradePoints.ToString();
+            techResText.text = "Technology\n" + GameManager.Instance.player.techPoints.ToString();
+            productionResText.text = "Production\n" + GameManager.Instance.player.productionPoints.ToString();
+
+            if (!GameManager.Instance.worldEvent)
+            {
+                checkTileSelection();
+            }
+            
+        }
 
         // World Event Check
         if (GameManager.Instance.worldEvent && !localWorldEventTrigger)
@@ -138,6 +186,39 @@ public class UIManager : MonoBehaviour
                     //Debug.Log(currentWorldEventSelection);
                 }
             });
+        }
+    }
+
+    private void checkTileSelection()
+    {
+        // Tile Selection Check
+        if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+
+            if (Physics.Raycast(ray, out hit, 10000))
+            {
+                currentSelectedTileInfo = hit.transform.gameObject.GetComponent<TileInfo>();
+                if (currentSelectedTileInfo.godIndex == GameManager.Instance.playerIndex)
+                {
+                    playerTileActionsCanvas.GetComponent<Canvas>().enabled = true;
+                    playerTileActionsCanvas.transform.Find("TileResourceText").GetComponent<TextMeshProUGUI>().text = currentSelectedTileInfo.resourceType;
+                    opponentTileActionsCanvas.GetComponent<Canvas>().enabled = false;
+                }
+                else if (currentSelectedTileInfo.godIndex != -1)
+                {
+                    playerTileActionsCanvas.GetComponent<Canvas>().enabled = false;
+                    opponentTileActionsCanvas.transform.Find("GodNameText").GetComponent<TextMeshProUGUI>().text = GameManager.Instance.playerInfoList[currentSelectedTileInfo.godIndex].godName.ToString();
+                    opponentTileActionsCanvas.GetComponent<Canvas>().enabled = true;
+                }
+            }
+        }
+
+        if (Input.GetKey(KeyCode.Escape))
+        {
+            playerTileActionsCanvas.GetComponent<Canvas>().enabled = false;
+            opponentTileActionsCanvas.GetComponent<Canvas>().enabled = false;
         }
     }
 
