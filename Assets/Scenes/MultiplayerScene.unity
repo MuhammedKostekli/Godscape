@@ -15716,7 +15716,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   uiManager: {fileID: 1159078186}
   gameMap: {fileID: 753488371}
-  worldEventPerSec: 30
+  worldEventPerSec: 60
   resourcePerTile: 100
   wEventTrigger:
     m_InternalValue: 0
@@ -15726,6 +15726,7 @@ MonoBehaviour:
   gameStartYear: 3245
   gameYearPerSec: 6
   worldEventCount: 20
+  increaseResourcePerYear: 50
 --- !u!4 &302992743
 Transform:
   m_ObjectHideFlags: 0
@@ -61644,7 +61645,7 @@ MonoBehaviour:
   - {fileID: 1033828059}
   - {fileID: 1049052997}
   gameManager: {fileID: 302992741}
-  worldEventSelectionSec: 10
+  worldEventSelectionSec: 5
   currentSelectedTileInfo: {fileID: 0}
 --- !u!4 &1159078188
 Transform:

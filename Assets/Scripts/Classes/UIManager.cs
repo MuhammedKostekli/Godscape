@@ -73,24 +73,23 @@ public class UIManager : MonoBehaviour
                         "Tsunami",
                         "Earthquake",
                         "Storm",
-                        "Invasion",
-                        "Invasion 2",
-                        "Civil War",
+                        "Blizzard",
+                        "Wildfire",
                         "World War",
+                        "Civil War",
                         "Seed of Gods",
-                        "Eon Fertilizer",
-                        "Eon Batteries",
-                        "Ring of Fire",
+                        "Archeology",
+                        "Camouflage",
+                        "Smart Computing",
+                        "Pyrium",
+                        "Ring Of Fire",
                         "Hackathlon",
                         "TradeX",
                         "Eon Crisis",
                         "Economical Crisis",
-                        "False Gods",
                         "Agnosticism",
                         "Immigration",
-                        "Cable Network",
-                        "Seed of Gods infected",
-                        "Necrosis"
+                        "Seed Of Gods Infected!"
                     };
     private bool localWorldEventTrigger = false;
     private int currentWorldEventSelection = -1;
@@ -113,12 +112,12 @@ public class UIManager : MonoBehaviour
         if (GameManager.Instance.gameStatus)
         {
             gameYearText.text = $"{GameManager.Instance.gameYear}";
-            godNameText.text = GameManager.Instance.player.godName.ToString();
-            militaryResText.text = "Army\n" + GameManager.Instance.player.militaryPoints.ToString();
-            cultureResText.text = "Culture\n" + GameManager.Instance.player.culturePoints.ToString();
-            tradeResText.text = "Trade\n" + GameManager.Instance.player.tradePoints.ToString();
-            techResText.text = "Technology\n" + GameManager.Instance.player.techPoints.ToString();
-            productionResText.text = "Production\n" + GameManager.Instance.player.productionPoints.ToString();
+            godNameText.text = GameManager.Instance.playerInfoListVar[GameManager.Instance.playerIndex].godName.ToString();
+            militaryResText.text = "Army\n" + GameManager.Instance.playerInfoListVar[GameManager.Instance.playerIndex].militaryPoints.ToString();
+            cultureResText.text = "Culture\n" + GameManager.Instance.playerInfoListVar[GameManager.Instance.playerIndex].culturePoints.ToString();
+            tradeResText.text = "Trade\n" + GameManager.Instance.playerInfoListVar[GameManager.Instance.playerIndex].tradePoints.ToString();
+            techResText.text = "Technology\n" + GameManager.Instance.playerInfoListVar[GameManager.Instance.playerIndex].techPoints.ToString();
+            productionResText.text = "Production\n" + GameManager.Instance.playerInfoListVar[GameManager.Instance.playerIndex].productionPoints.ToString();
 
             if (!GameManager.Instance.worldEvent)
             {
