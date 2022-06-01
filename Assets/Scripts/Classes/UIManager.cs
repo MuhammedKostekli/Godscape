@@ -172,11 +172,11 @@ public class UIManager : MonoBehaviour
         {
             gameYearText.text = $"{GameManager.Instance.gameYear}";
             godNameText.text = GameManager.Instance.playerInfoListVar[GameManager.Instance.playerIndex].godName.ToString();
-            militaryResText.text = "Army\n" + GameManager.Instance.playerInfoListVar[GameManager.Instance.playerIndex].militaryPoints.ToString();
-            cultureResText.text = "Culture\n" + GameManager.Instance.playerInfoListVar[GameManager.Instance.playerIndex].culturePoints.ToString();
-            tradeResText.text = "Trade\n" + GameManager.Instance.playerInfoListVar[GameManager.Instance.playerIndex].tradePoints.ToString();
-            techResText.text = "Technology\n" + GameManager.Instance.playerInfoListVar[GameManager.Instance.playerIndex].techPoints.ToString();
-            productionResText.text = "Production\n" + GameManager.Instance.playerInfoListVar[GameManager.Instance.playerIndex].productionPoints.ToString();
+            militaryResText.text = "" + GameManager.Instance.playerInfoListVar[GameManager.Instance.playerIndex].militaryPoints.ToString();
+            cultureResText.text = "" + GameManager.Instance.playerInfoListVar[GameManager.Instance.playerIndex].culturePoints.ToString();
+            tradeResText.text = "" + GameManager.Instance.playerInfoListVar[GameManager.Instance.playerIndex].tradePoints.ToString();
+            techResText.text = "" + GameManager.Instance.playerInfoListVar[GameManager.Instance.playerIndex].techPoints.ToString();
+            productionResText.text = "" + GameManager.Instance.playerInfoListVar[GameManager.Instance.playerIndex].productionPoints.ToString();
 
             if (!GameManager.Instance.worldEvent)
             {
@@ -281,6 +281,7 @@ public class UIManager : MonoBehaviour
             }
             else
             {
+                isActiveAction = true;
                 showPlayerActionAnnouncement("Organize Event", "Failed! Not enough resource");
             }
         });
@@ -296,6 +297,7 @@ public class UIManager : MonoBehaviour
             }
             else
             {
+                isActiveAction = true;
                 showPlayerActionAnnouncement("Espionage", "Failed! Not enough resource");
             }
         });
@@ -578,6 +580,7 @@ public class UIManager : MonoBehaviour
         else
         {
             showPlayerActionAnnouncement("Research", "Failed! Not enough resource");
+            isActiveAction = true;
         }
     }
 
