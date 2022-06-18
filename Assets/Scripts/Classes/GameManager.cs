@@ -285,7 +285,7 @@ public class GameManager : Singleton<GameManager>
         {
             if(obj.value.godIndex != id && obj.value.godIndex != -1)
             {
-                obj.value.gameObject.GetComponent<MeshRenderer>().material = Resources.Load("God" + (obj.value.godIndex+1) + "Color") as Material;
+                //obj.value.gameObject.GetComponent<MeshRenderer>().material = Resources.Load("God" + (obj.value.godIndex+1) + "Color") as Material;
             }
         }
     }
