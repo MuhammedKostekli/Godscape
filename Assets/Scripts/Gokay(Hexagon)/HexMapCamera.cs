@@ -26,7 +26,7 @@ public class HexMapCamera : MonoBehaviour
 		float zoomDelta = Input.GetAxis("Mouse ScrollWheel");
 		if (zoomDelta != 0f)
 		{
-			AdjustZoom(zoomDelta);
+			AdjustZoom(zoomDelta*-1);
 		}
 
 		float rotationDelta = Input.GetAxis("Rotation");

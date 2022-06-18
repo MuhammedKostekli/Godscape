@@ -87,6 +87,26 @@ public class UIManager : MonoBehaviour
 
     [SerializeField]
     private Button rumorButton;
+    [SerializeField] private Sprite tsunamiSprite;
+    [SerializeField] private Sprite earthqSprite;
+    [SerializeField] private Sprite stormSprite;
+    [SerializeField] private Sprite blzSprite;
+    [SerializeField] private Sprite wildfSprite;
+    [SerializeField] private Sprite wwSprite;
+    [SerializeField] private Sprite cwSprite;
+    [SerializeField] private Sprite seedSprite;
+    [SerializeField] private Sprite archeologySprite;
+    [SerializeField] private Sprite camoSprite;
+    [SerializeField] private Sprite computeSprite;
+    [SerializeField] private Sprite pyriumSprite;
+    [SerializeField] private Sprite ringSprite;
+    [SerializeField] private Sprite hackSprite;
+    [SerializeField] private Sprite tradexSprite;
+    [SerializeField] private Sprite eonSprite;
+    [SerializeField] private Sprite econSprite;
+    [SerializeField] private Sprite agnoSprite;
+    [SerializeField] private Sprite immigSprite;
+    [SerializeField] private Sprite infectedSprite;
 
     [SerializeField] GameObject gameManager;
 
@@ -95,7 +115,10 @@ public class UIManager : MonoBehaviour
     public bool isActiveAction = true;
 
     public bool isActiveOpponentAction = true;
-
+    List<Sprite> worldEventSprites = new List<Sprite>()
+    {
+         
+};
     private List<string> worldEventNameList = new List<string>()  {
                         "Tsunami",
                         "Earthquake",
@@ -218,6 +241,7 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
+        worldEventSpritesFunc();
         startServerButton.onClick.AddListener(() =>
         {
             if (NetworkManager.Singleton.StartServer())
@@ -372,6 +396,7 @@ public class UIManager : MonoBehaviour
         for(int i=0; i<worldEventSelectionButtons.Count; i++)
         {
             worldEventSelectionButtons[i].GetComponentInChildren<TextMeshProUGUI>().text = worldEventNameList[GameManager.Instance.worldEventIndexList[i]];
+            worldEventSelectionButtons[i].GetComponent<Image>().sprite = worldEventSprites[GameManager.Instance.worldEventIndexList[i]];
         }
     }
 
@@ -655,5 +680,30 @@ public class UIManager : MonoBehaviour
 
         yield return new WaitForSeconds(30);
         isActiveOpponentAction = true;
+    }
+
+    void worldEventSpritesFunc()
+    {
+        worldEventSprites.Add(tsunamiSprite);
+        worldEventSprites.Add(earthqSprite);
+        worldEventSprites.Add(stormSprite);
+        worldEventSprites.Add(blzSprite);
+        worldEventSprites.Add(wildfSprite);
+        worldEventSprites.Add(wwSprite);
+        worldEventSprites.Add(cwSprite);
+        worldEventSprites.Add(seedSprite);
+        worldEventSprites.Add(archeologySprite);
+        worldEventSprites.Add(camoSprite);
+        worldEventSprites.Add(computeSprite);
+        worldEventSprites.Add(pyriumSprite);
+        worldEventSprites.Add(ringSprite);
+        worldEventSprites.Add(hackSprite);
+        worldEventSprites.Add(tradexSprite);
+        worldEventSprites.Add(eonSprite);
+        worldEventSprites.Add(econSprite);
+        worldEventSprites.Add(agnoSprite);
+        worldEventSprites.Add(immigSprite);
+        worldEventSprites.Add(infectedSprite);
+
     }
 }
